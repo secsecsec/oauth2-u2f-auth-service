@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="https://demo.yubico.com/js/u2f-api.js"></script>
+
+  </head>
+  <body>
+    <h1>New user {{ .name }}</h1>
+    <p>Press key to register</p>
+    <script>
+
+  function registered(resp) {
+    console.log(resp);
+    $.post('/u2f/register/response', JSON.stringify(resp)).done(function(r) {
+      window.location = r;
+    });
+  }
+
+  $(function register() {
+    $.getJSON('/u2f/register/request').done(function(req) {
+      console.log(req);
+      u2f.register(req.appId, [req], [], registered, 60);
+    });
+  });
+
+    </script>
+
+  </body>
+</html>

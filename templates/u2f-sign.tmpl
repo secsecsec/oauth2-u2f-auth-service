@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="https://demo.yubico.com/js/u2f-api.js"></script>
+
+  </head>
+  <body>
+    <h1>Returning user {{ .name }}</h1>
+    <p>Press key to authenticate</p>
+    <script>
+
+  function signed(resp) {
+    console.log(resp);
+    $.post('/u2f/sign/response', JSON.stringify(resp)).done(function(r) {
+      window.location = r
+    });
+  }
+
+  $(function sign() {
+    $.getJSON('/u2f/sign/request').done(function(req) {
+      console.log(req);
+      var r = req.signRequests[0];
+      u2f.sign(r.appId, r.challenge, req.signRequests, signed, 60);
+    });
+  });
+
+    </script>
+
+  </body>
+</html>
